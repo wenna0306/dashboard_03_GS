@@ -54,7 +54,7 @@ if page =='Faults':
         return pd.read_excel(filename, header=1, index_col='Fault Number', usecols=cols, parse_dates=parse_dates)
 
 
-    df = fetch_file('Fault 2021-11-30 231126.xlsx')
+    df = fetch_file('Fault 2021-12-04 235350.xlsx')
     df.columns = df.columns.str.replace(' ', '_')
     df['Time_Acknowledged_mins'] = (df.Fault_Acknowledged_Date - df.Reported_Date)/pd.Timedelta(minutes=1)
     df['Time_Site_Reached_mins'] = (df.Responded_on_Site_Date - df.Reported_Date)/pd.Timedelta(minutes=1)
@@ -389,42 +389,9 @@ if page =='Faults':
     df6.reset_index(inplace=True)
 
     x = df6['Building_Trade']
-    y1 = df6.Fault_Site_Reached_count
-    y2 = df6['Fault_Site_Reached_mean(hrs)']
-    y3 = df6['Fault_Site_Reached_sum(hrs)']
     y4 = df6.Fault_Recovered_count
     y5 = df6['Fault_Recovered_mean(hrs)']
     y6 = df6['Fault_Recovered_sum(hrs)']
-
-    fig01, fig02, fig03 = st.columns(3)
-    with fig01, _lock:
-        fig01 = go.Figure(data=[go.Pie(values=y1, labels=x, hoverinfo='all', textinfo='label+percent+value',
-                                       textfont_size=15, textfont_color='white', textposition='inside', showlegend=False, hole=.4)])
-        fig01.update_layout(title='Proportions of Building Trade(Responded)', annotations=[dict(text='Responded', x=0.5, y=0.5, font_size=18, showarrow=False)])
-        st.plotly_chart(fig01, use_container_width=True)
-
-    with fig02, _lock:
-        fig02 = go.Figure(data=[go.Bar(x=x, y=y2, orientation='v', text=y2,
-                                       textfont=dict(family='sana serif', size=14, color='#c4fff7'),
-                                       textposition='auto', textangle=-45, texttemplate='%{text:.2f}')])
-        fig02.update_xaxes(title_text="Building Trade", tickangle=-45, title_font_color='#f8481c', showgrid=False, showline=True, linewidth=1, linecolor='#59656d')
-        fig02.update_yaxes(title_text='Mean Time Spent', title_font_color='#f8481c', showgrid=True, gridwidth=0.1, gridcolor='#1f3b4d',
-                           showline=True, linewidth=1, linecolor='#59656d')
-        fig02.update_traces(marker_color='#f8481c', marker_line_color='#f8481c', marker_line_width=1)
-        fig02.update_layout(title='Mean Time Spent to Responded(hrs)', plot_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig02, use_container_width=True)
-
-    with fig03, _lock:
-        fig03 = go.Figure(data=[go.Bar(x=x, y=y3, orientation='v', text=y3,
-                                       textfont=dict(family='sana serif', size=14, color='#c4fff7'),
-                                       textposition='auto', textangle=-45, texttemplate='%{text:.2f}')
-                          ])
-        fig03.update_xaxes(title_text="Building Trade", tickangle=-45, title_font_color='#a0450e', showgrid=False, showline=True, linewidth=1, linecolor='#59656d')
-        fig03.update_yaxes(title_text='Total Time Spent', title_font_color='#a0450e', showgrid=True, gridwidth=0.1, gridcolor='#1f3b4d',
-                           showline=True, linewidth=1, linecolor='#59656d')
-        fig03.update_traces(marker_color='#a0450e', marker_line_color='#a0450e', marker_line_width=1)
-        fig03.update_layout(title='Total Time Spent to Responded(hrs)', plot_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig03, use_container_width=True)
 
     fig04, fig05, fig06 = st.columns(3)
     with fig04, _lock:
@@ -472,59 +439,9 @@ if page =='Faults':
                  'Fault_Recovered_count', 'Fault_Recovered_mean(hrs)', 'Fault_Recovered_sum(hrs)']]
     df8.reset_index(inplace=True)
 
-    df_fig07 = df8.loc[:, ['Trade_Category', 'Fault_Site_Reached_count']].sort_values('Fault_Site_Reached_count', ascending=False).head(10)
-    df_fig08 = df8.loc[:, ['Trade_Category', 'Fault_Site_Reached_mean(hrs)']].sort_values('Fault_Site_Reached_mean(hrs)', ascending=False).head(10)
-    df_fig09 = df8.loc[:, ['Trade_Category', 'Fault_Site_Reached_sum(hrs)']].sort_values('Fault_Site_Reached_sum(hrs)', ascending=False).head(10)
     df_fig10 = df8.loc[:, ['Trade_Category', 'Fault_Recovered_count']].sort_values('Fault_Recovered_count', ascending=False).head(10)
     df_fig11 = df8.loc[:, ['Trade_Category', 'Fault_Recovered_mean(hrs)']].sort_values('Fault_Recovered_mean(hrs)', ascending=False).head(10)
     df_fig12 = df8.loc[:, ['Trade_Category', 'Fault_Recovered_sum(hrs)']].sort_values('Fault_Recovered_sum(hrs)', ascending=False).head(10)
-
-    x_fig07 = df_fig07.Trade_Category
-    y_fig07 = df_fig07['Fault_Site_Reached_count']
-    x_fig08 = df_fig08.Trade_Category
-    y_fig08 = df_fig08['Fault_Site_Reached_mean(hrs)']
-    x_fig09 = df_fig09.Trade_Category
-    y_fig09 = df_fig09['Fault_Site_Reached_sum(hrs)']
-
-    fig07, fig08, fig09 = st.columns(3)
-    with fig07, _lock:
-        fig07 = go.Figure(data=[go.Bar(x=x_fig07, y=y_fig07, orientation='v', text=y_fig07,
-                            textfont=dict(family='sana serif', size=14, color='#c4fff7'),
-                            textposition='auto', textangle=-45)
-                                ])
-        fig07.update_xaxes(title_text="Trade Category", tickangle=-45, title_font_color='#fe86a4', showgrid=False,
-                           showline=True, linewidth=1, linecolor='#59656d')
-        fig07.update_yaxes(title_text='Count(Responded)', title_font_color='#fe86a4', showgrid=True, gridwidth=0.1,
-                           gridcolor='#1f3b4d', showline=True, linewidth=1, linecolor='#59656d')
-        fig07.update_traces(marker_color='#fe86a4', marker_line_color='#fe86a4', marker_line_width=1)
-        fig07.update_layout(title='Count(Responded)-Top 10', plot_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig07, use_container_width=True)
-
-    with fig08, _lock:
-        fig08 = go.Figure(data=[go.Bar(x=x_fig08, y=y_fig08, orientation='v', text=y_fig08,
-                               textfont=dict(family='sana serif', size=14, color='#c4fff7'),
-                               textposition='auto', textangle=-45, texttemplate='%{text:.2f}')
-                                ])
-        fig08.update_xaxes(title_text="Trade Category", tickangle=-45, title_font_color='#a55af4', showgrid=False,
-                                showline=True, linewidth=1, linecolor='#59656d')
-        fig08.update_yaxes(title_text='Mean Time Spent', title_font_color='#a55af4', showgrid=True, gridwidth=0.1,
-                               gridcolor='#1f3b4d', showline=True, linewidth=1, linecolor='#59656d')
-        fig08.update_traces(marker_color='#a55af4', marker_line_color='#a55af4', marker_line_width=1)
-        fig08.update_layout(title='Mean Time Spent to Responded(hrs)-Top 10', plot_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig08, use_container_width=True)
-
-    with fig09, _lock:
-        fig09 = go.Figure(data=[go.Bar(x=x_fig09, y=y_fig09, orientation='v', text=y_fig09,
-                                textfont=dict(family='sana serif', size=14, color='#c4fff7'),
-                                textposition='auto', textangle=-45, texttemplate='%{text:.2f}')
-                                ])
-        fig09.update_xaxes(title_text="Trade Category", tickangle=-45, title_font_color='#087871', showgrid=False,
-                               showline=True, linewidth=1, linecolor='#59656d')
-        fig09.update_yaxes(title_text='Total Time Spent', title_font_color='#087871', showgrid=True, gridwidth=0.1,
-                               gridcolor='#1f3b4d', showline=True, linewidth=1, linecolor='#59656d')
-        fig09.update_traces(marker_color='#087871', marker_line_color='#087871', marker_line_width=1)
-        fig09.update_layout(title='Total Time Spent to Responded(hrs)-Top 10', plot_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig09, use_container_width=True)
 
     x_fig10 = df_fig10.Trade_Category
     y_fig10 = df_fig10['Fault_Recovered_count']
@@ -589,59 +506,10 @@ if page =='Faults':
                  'Fault_Recovered_count', 'Fault_Recovered_mean(hrs)', 'Fault_Recovered_sum(hrs)']]
     df10.reset_index(inplace=True)
 
-    df_fig13 = df10.loc[:, ['Type_of_Fault', 'Fault_Site_Reached_count']].sort_values('Fault_Site_Reached_count', ascending=False).head(10)
-    df_fig14 = df10.loc[:, ['Type_of_Fault', 'Fault_Site_Reached_mean(hrs)']].sort_values('Fault_Site_Reached_mean(hrs)', ascending=False).head(10)
-    df_fig15 = df10.loc[:, ['Type_of_Fault', 'Fault_Site_Reached_sum(hrs)']].sort_values('Fault_Site_Reached_sum(hrs)', ascending=False).head(10)
     df_fig16 = df10.loc[:, ['Type_of_Fault', 'Fault_Recovered_count']].sort_values('Fault_Recovered_count', ascending=False).head(10)
     df_fig17 = df10.loc[:, ['Type_of_Fault', 'Fault_Recovered_mean(hrs)']].sort_values('Fault_Recovered_mean(hrs)', ascending=False).head(10)
     df_fig18 = df10.loc[:, ['Type_of_Fault', 'Fault_Recovered_sum(hrs)']].sort_values('Fault_Recovered_sum(hrs)', ascending=False).head(10)
 
-    x_fig13 = df_fig13.Type_of_Fault
-    y_fig13 = df_fig13['Fault_Site_Reached_count']
-    x_fig14 = df_fig14.Type_of_Fault
-    y_fig14 = df_fig14['Fault_Site_Reached_mean(hrs)']
-    x_fig15 = df_fig15.Type_of_Fault
-    y_fig15 = df_fig15['Fault_Site_Reached_sum(hrs)']
-
-    fig13, fig14, fig15 = st.columns(3)
-    with fig13, _lock:
-        fig13 = go.Figure(data=[go.Bar(x=x_fig13, y=y_fig13, orientation='v', text=y_fig13,
-                            textfont=dict(family='sana serif', size=14, color='#c4fff7'),
-                            textposition='auto', textangle=-45)
-                                ])
-        fig13.update_xaxes(title_text="Type of Fault", tickangle=-45, title_font_color='#3778bf', showgrid=False,
-                           showline=True, linewidth=1, linecolor='#59656d')
-        fig13.update_yaxes(title_text='Count(Responded)', title_font_color='#3778bf', showgrid=True, gridwidth=0.1,
-                           gridcolor='#1f3b4d', showline=True, linewidth=1, linecolor='#59656d')
-        fig13.update_traces(marker_color='#3778bf', marker_line_color='#3778bf', marker_line_width=1)
-        fig13.update_layout(title='Count(Responded)-Top 10', plot_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig13, use_container_width=True)
-
-    with fig14, _lock:
-        fig14 = go.Figure(data=[go.Bar(x=x_fig14, y=y_fig14, orientation='v', text=y_fig14,
-                               textfont=dict(family='sana serif', size=14, color='#c4fff7'),
-                               textposition='auto', textangle=-45, texttemplate='%{text:.2f}')
-                                ])
-        fig14.update_xaxes(title_text="Type of Fault", tickangle=-45, title_font_color='#3f829d', showgrid=False,
-                           showline=True, linewidth=1, linecolor='#59656d')
-        fig14.update_yaxes(title_text='Mean Time Spent', title_font_color='#3f829d', showgrid=True, gridwidth=0.1,
-                           gridcolor='#1f3b4d', showline=True, linewidth=1, linecolor='#59656d')
-        fig14.update_traces(marker_color='#3f829d', marker_line_color='#3f829d', marker_line_width=1)
-        fig14.update_layout(title='Mean Time Spent to Responded(hrs)-Top 10', plot_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig14, use_container_width=True)
-
-    with fig15, _lock:
-        fig15 = go.Figure(data=[go.Bar(x=x_fig15, y=y_fig15, orientation='v', text=y_fig15,
-                            textfont=dict(family='sana serif', size=14, color='#c4fff7'),
-                            textposition='auto', textangle=-45, texttemplate='%{text:.2f}')
-                                ])
-        fig15.update_xaxes(title_text="Type of Fault", tickangle=-45, title_font_color='#015482', showgrid=False,
-                           showline=True, linewidth=1, linecolor='#59656d')
-        fig15.update_yaxes(title_text='Total Time Spent', title_font_color='#015482', showgrid=True, gridwidth=0.1,
-                           gridcolor='#1f3b4d', showline=True, linewidth=1, linecolor='#59656d')
-        fig15.update_traces(marker_color='#015482', marker_line_color='#015482', marker_line_width=1)
-        fig15.update_layout(title='Total Time Spent to Responded(hrs)-Top 10', plot_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig15, use_container_width=True)
 
     x_fig16 = df_fig16.Type_of_Fault
     y_fig16 = df_fig16['Fault_Recovered_count']
@@ -695,70 +563,46 @@ if page =='Faults':
     st.markdown(html_card_subheader_location, unsafe_allow_html=True)
     st.markdown('##')
 
-    ser_fig19 = df4.groupby(['Building']).Type_of_Fault.count().sort_values()
-
-    df4.Level = df4.Level.fillna('') #Replace NaN with blank/empty string
-    df4['New_Location'] = df4.Building+'_'+df4.Level
-    df11 = df4.groupby(by=['New_Location']).agg(['count', 'max', 'min', 'mean', 'sum'])
-    cols_name003 = ['Fault_Acknowledged_count', 'Fault_Acknowledged_max(hrs)', 'Fault_Acknowledged_min(hrs)', 'Fault_Acknowledged_mean(hrs)',
+    df11 = df4.groupby(by=['Building']).agg(['count', 'max', 'min', 'mean', 'sum'])
+    cols_name_location = ['Fault_Acknowledged_count', 'Fault_Acknowledged_max(hrs)', 'Fault_Acknowledged_min(hrs)', 'Fault_Acknowledged_mean(hrs)',
                    'Fault_Acknowledged_sum(hrs)', 'Fault_Site_Reached_count', 'Fault_Site_Reached_max(hrs)', 'Fault_Site_Reached_min(hrs)',
                    'Fault_Site_Reached_mean(hrs)', 'Fault_Site_Reached_sum(hrs)', 'Fault_Work_Started_count', 'Fault_Work_Started_max(hrs)',
                    'Fault_Work_Started_min(hrs)', 'Fault_Work_Started_mean(hrs)', 'Fault_Work_Started_sum(hrs)', 'Fault_Recovered_count',
                    'Fault_Recovered_max(hrs)', 'Fault_Recovered_min(hrs)', 'Fault_Recovered_mean(hrs)', 'Fault_Recovered_sum(hrs)']
-    df11.columns=cols_name003
-    ser_fig20 = df11['Fault_Recovered_count'].sort_values().tail(10)
-    ser_fig21 = df11['Fault_Recovered_mean(hrs)'].sort_values().tail(10)
-    ser_fig22 = df11['Fault_Recovered_sum(hrs)'].sort_values().tail(10)
+    df11.columns = cols_name_location
+    df12 = df11.loc[:, ['Fault_Recovered_count', 'Fault_Recovered_sum(hrs)']]
+
+    x_fig19 = df12['Fault_Recovered_count'].sort_values().index
+    y_fig19 = df12['Fault_Recovered_count'].sort_values().values
+
+    x_fig20 = df12['Fault_Recovered_sum(hrs)'].sort_values().index
+    y_fig20 = df12['Fault_Recovered_sum(hrs)'].sort_values().values
+
 
     fig19, fig20 = st.columns(2)
     with fig19, _lock:
-        fig19 = go.Figure(data=[go.Bar(x=ser_fig19.values, y=ser_fig19.index, orientation='h', text=ser_fig19.values,
+        fig19 = go.Figure(data=[go.Bar(x=y_fig19, y=x_fig19, orientation='h', text=y_fig19,
                              textfont=dict(family='sana serif', size=14, color='#c4fff7'),
                              textposition='outside', textangle=0)
                                 ])
         fig19.update_xaxes(title_text="Number of Fault", title_font_color='#728f02', showgrid=True,
                            gridwidth=0.1, gridcolor='#1f3b4d', showline=True, linewidth=1, linecolor='#59656d')
-        fig19.update_yaxes(title_text='Building', title_font_color='#728f02', showgrid=False, showline=True, linewidth=1, linecolor='#59656d')
+        fig19.update_yaxes(title_text='Building', title_font_color='#728f02', showgrid=False, showline=True, linewidth=1, linecolor='#59656d', tickmode='linear')
         fig19.update_traces(marker_color='#728f02', marker_line_color='#728f02', marker_line_width=1)
         fig19.update_layout(title='Number of Fault vs Building', plot_bgcolor='rgba(0,0,0,0)')
         st.plotly_chart(fig19, use_container_width=True)
 
     with fig20, _lock:
-        fig20 = go.Figure(data=[go.Bar(x=ser_fig20.values, y=ser_fig20.index, orientation='h', text=ser_fig20.values,
+        fig20 = go.Figure(data=[go.Bar(x=y_fig20, y=x_fig20, orientation='h', text=y_fig20,
                                textfont=dict(family='sana serif', size=14, color='#c4fff7'),
-                               textposition='outside', textangle=0)
+                               textposition='outside', textangle=0, texttemplate='%{text:.2f}')
                                 ])
-        fig20.update_xaxes(title_text="Number of Fault", title_font_color='#516572', showgrid=True, gridwidth=0.1,
+        fig20.update_xaxes(title_text="Total Time Spent", title_font_color='#516572', showgrid=True, gridwidth=0.1,
                            gridcolor='#1f3b4d', showline=True, linewidth=1, linecolor='#59656d')
-        fig20.update_yaxes(title_text='Level', title_font_color='#516572', showgrid=False, showline=True, linewidth=1, linecolor='#59656d')
+        fig20.update_yaxes(title_text='Building', title_font_color='#516572', showgrid=False, showline=True, linewidth=1, tickmode='linear')
         fig20.update_traces(marker_color='#516572', marker_line_color='#516572', marker_line_width=1)
-        fig20.update_layout(title='Number of Fault vs Level-Top 10', plot_bgcolor='rgba(0,0,0,0)')
+        fig20.update_layout(title='Total Time Spent vs Building', plot_bgcolor='rgba(0,0,0,0)')
         st.plotly_chart(fig20, use_container_width=True)
-
-    fig21, fig22 = st.columns(2)
-    with fig21, _lock:
-        fig21 = go.Figure(data=[go.Bar(x=ser_fig21.values, y=ser_fig21.index, orientation='h', text=ser_fig21.values,
-                               textfont=dict(family='sana serif', size=14, color='#c4fff7'),
-                               textposition='outside', textangle=0, texttemplate='%{text:.2f}')
-                                ])
-        fig21.update_xaxes(title_text="Mean Time Spent", title_font_color='#efc0fe', showgrid=True, gridwidth=0.1,
-                           gridcolor='#1f3b4d', showline=True, linewidth=1, linecolor='#59656d')
-        fig21.update_yaxes(title_text='Level', title_font_color='#efc0fe', showgrid=False, showline=True, linewidth=1, linecolor='#59656d')
-        fig21.update_traces(marker_color='#efc0fe', marker_line_color='#efc0fe', marker_line_width=1)
-        fig21.update_layout(title='Mean Time Spent to Recovered(hrs) vs Level-Top 10', plot_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig21, use_container_width=True)
-
-    with fig22, _lock:
-        fig22 = go.Figure(data=[go.Bar(x=ser_fig22.values, y=ser_fig22.index, orientation='h',  text=ser_fig22.values,
-                               textfont=dict(family='sana serif', size=14, color='#c4fff7'),
-                               textposition='outside', textangle=0, texttemplate='%{text:.2f}')
-                                ])
-        fig22.update_xaxes(title_text="Total Time Spent", title_font_color='#c7ac7d', showgrid=True, gridwidth=0.1,
-                           gridcolor='#1f3b4d', showline=True, linewidth=1, linecolor='#59656d')
-        fig22.update_yaxes(title_text='Level', title_font_color='#c7ac7d', showgrid=False, showline=True, linewidth=1, linecolor='#59656d')
-        fig22.update_traces(marker_color='#c7ac7d', marker_line_color='#c7ac7d', marker_line_width=1)
-        fig22.update_layout(title='Total Time Spent to Recovered(hrs) vs Level-Top 10', plot_bgcolor='rgba(0,0,0,0)')
-        st.plotly_chart(fig22, use_container_width=True)
 
 
 
@@ -988,7 +832,7 @@ if page =='Schedules':
     st.markdown(html_card_subheader_schedules_Tier2, unsafe_allow_html=True)
     st.markdown('##')
 
-    dfs2 = dfs_completed.groupby(by=['Trade_Category']).agg(['count', 'max', 'min', 'mean', 'sum']).sort_values(('Time_Work_Completed_hrs', 'count'), ascending=False)
+    dfs2 = dfs_completed.groupby(by=['Trade_Category']).agg(['count', 'max', 'min', 'mean', 'sum'])
     col_name_s2 = ['Schedule_Completed_count', 'Time_Schedule_Completed_max(hrs)', 'Time_Schedule_Completed_min(hrs)', 'Time_Schedule_Completed_mean(hrs)', 'Time_Schedule_Completed_sum(hrs)']
     dfs2.columns = col_name_s2
     dfs2.reset_index(inplace=True)
@@ -997,14 +841,18 @@ if page =='Schedules':
     dfs_fig05 = dfs2.loc[:, ['Trade_Category', 'Time_Schedule_Completed_mean(hrs)']].sort_values('Time_Schedule_Completed_mean(hrs)', ascending=False).head(10)
     dfs_fig06 = dfs2.loc[:, ['Trade_Category', 'Time_Schedule_Completed_sum(hrs)']].sort_values('Time_Schedule_Completed_sum(hrs)', ascending=False).head(10)
 
-    xs2 = dfs2['Trade_Category']
-    ys4 = dfs_fig04['Schedule_Completed_count']
-    ys5 = dfs_fig05['Time_Schedule_Completed_mean(hrs)']
-    ys6 = dfs_fig06['Time_Schedule_Completed_sum(hrs)']
+    xs_fig04 = dfs_fig04['Trade_Category']
+    ys_fig04 = dfs_fig04['Schedule_Completed_count']
+
+    xs_fig05 = dfs_fig05['Trade_Category']
+    ys_fig05 = dfs_fig05['Time_Schedule_Completed_mean(hrs)']
+
+    xs_fig06 = dfs_fig06['Trade_Category']
+    ys_fig06 = dfs_fig06['Time_Schedule_Completed_sum(hrs)']
 
     figs04, figs05, figs06 = st.columns(3)
     with figs04, _lock:
-        figs04 = go.Figure(data=[go.Bar(x=xs2, y=ys4, orientation='v', text=ys4,
+        figs04 = go.Figure(data=[go.Bar(x=xs_fig04, y=ys_fig04, orientation='v', text=ys_fig04,
                                         textfont=dict(family='sana serif', size=14, color='#c4fff7'),
                                         textposition='auto', textangle=-45)
                                  ])
@@ -1017,7 +865,7 @@ if page =='Schedules':
         st.plotly_chart(figs04, use_container_width=True)
 
     with figs05, _lock:
-        figs05 = go.Figure(data=[go.Bar(x=xs2, y=ys5, orientation='v', text=ys5,
+        figs05 = go.Figure(data=[go.Bar(x=xs_fig05, y=ys_fig05, orientation='v', text=ys_fig05,
                                         textfont=dict(family='sana serif', size=14, color='#c4fff7'),
                                         textposition='auto', textangle=-45, texttemplate='%{text:.2f}')
                                  ])
@@ -1030,7 +878,7 @@ if page =='Schedules':
         st.plotly_chart(figs05, use_container_width=True)
 
     with figs06, _lock:
-        figs06 = go.Figure(data=[go.Bar(x=xs2, y=ys6, orientation='v', text=ys6,
+        figs06 = go.Figure(data=[go.Bar(x=xs_fig06, y=ys_fig06, orientation='v', text=ys_fig06,
                                         textfont=dict(family='sana serif', size=14, color='#c4fff7'),
                                         textposition='auto', textangle=-45, texttemplate='%{text:.2f}')
                                  ])
@@ -1050,23 +898,141 @@ if page =='Schedules':
 
 
 # --------------------------------------Inventories----------------------------------------------------------------------
-# if page =='Inventories':
-# dfinventories =
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-# hide_menu_style = """
-#     <style>
-#     #MainMenu {visibility: hidden;}
-#     footer {visibility: hidden;}
-#     header {visibility: hidden;}
-#     </style>
-#     """
-# st.markdown(hide_menu_style, unsafe_allow_html=True)
+if page =='Inventories':
+    use_cols =['Description', 'Category', 'Subcategory', 'Ref. ID', 'Reference Location', 'Quantity', 'Request to draw or add',
+           'Reference number', 'Created date']
+    date=['Created date']
+    dfEC11 = pd.read_excel('Transaction 2021-12-04 012805(EC11).xlsx', header=1, usecols=use_cols, parse_dates=date)
+    dfEC11['Created day'] = dfEC11['Created date'].dt.day
+
+    dfCM18 = pd.read_excel('Transaction 2021-12-04 012805(CM18).xlsx', header=1, usecols=use_cols, parse_dates=date)
+    dfCM18['Created day'] = dfCM18['Created date'].dt.day
+
+    serEC11_daily = dfEC11.groupby(by=['Created day'])['Request to draw or add'].sum()
+
+    serEC11fast = dfEC11.groupby(by=['Description'])['Request to draw or add'].sum().sort_values(ascending=True)
+
+    html_card_title_inventories="""
+        <div class="card">
+          <div class="card-body" style="border-radius: 10px 10px 0px 0px; padding-top: 5px; width: 800px;
+           height: 50px;">
+            <h1 class="card-title" style=color:#ff4f00; font-family:Georgia; text-align: left; padding: 0px 0;">INVENTORIES MOVEMENT Dec 2021</h1>
+          </div>
+        </div>
+        """
+    st.markdown(html_card_title_inventories, unsafe_allow_html=True)
+    st.markdown('##')
+    st.markdown('##')
+    st.subheader('GBB-EC11')
+
+    total_inventory_balanceEC11 = dfEC11['Quantity'].sum()
+    total_inventory_requestedEC11 = dfEC11['Request to draw or add'].sum()
+    total_replenishmentEC11 = 0
+
+    column01_inventory, column02_inventory, column03_inventory = st.columns(3)
+
+    with column01_inventory, _lock:
+        st.markdown('**Balance**')
+        st.markdown(f"<h2 style='text-align: left; color: #703bef;'>{total_inventory_balanceEC11}</h2>", unsafe_allow_html=True)
+    with column02_inventory, _lock:
+        st.markdown('**Requested**')
+        st.markdown(f"<h2 style='text-align: left; color: #3c9992;'>{total_inventory_requestedEC11}</h2>", unsafe_allow_html=True)
+    with column03_inventory, _lock:
+        st.markdown('**Replenishment**')
+        st.markdown(f"<h2 style='text-align: left; color: #d0c101;'>{total_replenishmentEC11}</h2>", unsafe_allow_html=True)
+
+
+    st.markdown('##')
+    st.subheader('GBB-CM18')
+
+    total_inventory_balanceCM18 = dfCM18['Quantity'].sum()
+    total_inventory_requestedCM18 = dfCM18['Request to draw or add'].sum()
+    total_replenishmentCM18 = 0
+
+    column04_inventory, column05_inventory, column06_inventory = st.columns(3)
+
+    with column04_inventory, _lock:
+        st.markdown('**Balance**')
+        st.markdown(f"<h2 style='text-align: left; color: #703bef;'>{total_inventory_balanceCM18}</h2>",
+                    unsafe_allow_html=True)
+    with column05_inventory, _lock:
+        st.markdown('**Requested**')
+        st.markdown(f"<h2 style='text-align: left; color: #3c9992;'>{total_inventory_requestedCM18}</h2>",
+                    unsafe_allow_html=True)
+    with column06_inventory, _lock:
+        st.markdown('**Replenishment**')
+        st.markdown(f"<h2 style='text-align: left; color: #d0c101;'>{total_replenishmentCM18}</h2>",
+                    unsafe_allow_html=True)
+
+    html_card_subheader_inventoriesEC11 = """
+        <div class="card">
+          <div class="card-body" style="border-radius: 10px 10px 0px 0px; background:#ff4f00; padding-top: 5px; width: 600px;
+           height: 50px;">
+            <h3 class="card-title" style="background-color:#ff4f00; color:#eabd1d; font-family:Georgia; text-align: center; padding: 0px 0;">Inventory Movement Morning-EC11</h3>
+          </div>
+        </div>
+        """
+    st.markdown('##')
+    st.markdown('##')
+    st.markdown(html_card_subheader_inventoriesEC11, unsafe_allow_html=True)
+    st.markdown('##')
+
+    xinventories_daily = serEC11_daily.index
+    yinventories_daily = serEC11_daily.values
+    yinventories_mean = serEC11_daily.values.mean()
+
+    figinventories_daily, figinventories_fast = st.columns(2)
+
+    with figinventories_daily, _lock:
+        figinventories_daily = go.Figure(data=go.Scatter(x=xinventories_daily, y=yinventories_daily, mode='lines+markers+text', line=dict(color='#13bbaf', width=3),
+                                text=yinventories_daily, textfont=dict(family='sana serif', size=14, color='#c4fff7'), textposition='top center'))
+        figinventories_daily.add_hline(y=yinventories_mean, line_dash='dot', line_color='#96ae8d', line_width=2, annotation_text='Average Line',
+                                annotation_position='bottom right', annotation_font_size=18, annotation_font_color='green')
+        figinventories_daily.update_xaxes(title_text='Date', tickangle=-45, title_font_color='#74a662', tickmode='linear',
+                                   range=[1, 31], showgrid=False, showline=True, linewidth=1, linecolor='#59656d')
+        figinventories_daily.update_yaxes(title_text='Number of Inventory', title_font_color='#74a662', tickmode='linear', showgrid=False,
+                                   gridwidth=0.1, gridcolor='#1f3b4d', showline=True, linewidth=1, linecolor='#59656d')
+        figinventories_daily.update_layout(title='Daily Movement', plot_bgcolor='rgba(0, 0, 0, 0)',
+                                 # xaxis=dict(showticklabels=True, ticks='outside', tickfont=dict(family='Arial', size=12, color='rgb(82, 82, 82)')),
+                                 # yaxis=dict(showticklabels=True, ticks='outside', tickfont=dict(family='Arial', size=12, color='rgb(82, 82, 82)'))
+                                 )
+        st.plotly_chart(figinventories_daily, use_container_width=True)
+
+    xinventories_fast = serEC11fast.index
+    yinventories_fast = serEC11fast.values
+
+    with figinventories_fast, _lock:
+        figinventories_fast = go.Figure(data=[go.Bar(x=yinventories_fast, y=xinventories_fast, text=yinventories_fast,
+                                                     orientation='h', textfont=dict(family='sana serif', size=14, color='#c4fff7'),
+                                                    textposition='outside', textangle=0)
+                                            ])
+        figinventories_fast.update_xaxes(title_text="Number of Inventory", tickangle=-45, title_font_color='#087871', showgrid=True,
+                                         gridwidth=0.1, gridcolor='#1f3b4d', showline=True, linewidth=1, linecolor='#59656d')
+        figinventories_fast.update_yaxes(title_text='Description', title_font_color='#087871', showgrid=False, gridwidth=0.1,
+                            gridcolor='#1f3b4d', showline=True, linewidth=1, linecolor='#59656d')
+        figinventories_fast.update_traces(marker_color='#087871', marker_line_color='#087871', marker_line_width=1)
+        figinventories_fast.update_layout(title='Fast Moving Inventories', plot_bgcolor='rgba(0,0,0,0)')
+        st.plotly_chart(figinventories_fast, use_container_width=True)
+
+    html_card_subheader_inventoriesCM18 = """
+        <div class="card">
+          <div class="card-body" style="border-radius: 10px 10px 0px 0px; background:#ff4f00; padding-top: 5px; width: 600px;
+           height: 50px;">
+            <h3 class="card-title" style="background-color:#ff4f00; color:#eabd1d; font-family:Georgia; text-align: center; padding: 0px 0;">Inventory Movement Morning-CM18</h3>
+          </div>
+        </div>
+        """
+    st.markdown('##')
+    st.markdown('##')
+    st.markdown(html_card_subheader_inventoriesCM18, unsafe_allow_html=True)
+    st.markdown('##')
+    st.dataframe(dfCM18)
+
+hide_menu_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    </style>
+    """
+st.markdown(hide_menu_style, unsafe_allow_html=True)
