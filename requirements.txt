@@ -4,3 +4,4 @@ matplotlib==3.4.3
 numpy==1.21.4
 streamlit==1.1.0
 plotly==5.3.1
+st-btn-select==0.1.2
