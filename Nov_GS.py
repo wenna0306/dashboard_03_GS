@@ -26,7 +26,7 @@ if page =='Faults':
     <div class="card">
       <div class="card-body" style="border-radius: 10px 10px 0px 0px; padding-top: 5px; width: 600px;
        height: 50px;">
-        <h1 class="card-title" style=color:#116a8c; font-family:Georgia; text-align: left; padding: 0px 0;">FAULT DASHBOARD Dec 2021</h1>
+        <h1 class="card-title" style=color:#116a8c; font-family:Georgia; text-align: left; padding: 0px 0;">FAULT DASHBOARD Nov 2021</h1>
       </div>
     </div>
     """
@@ -651,7 +651,7 @@ if page =='Schedules':
     <div class="card">
       <div class="card-body" style="border-radius: 10px 10px 0px 0px; padding-top: 5px; width: 800px;
        height: 50px;">
-        <h1 class="card-title" style=color:#1dacd6; font-family:Georgia; text-align: left; padding: 0px 0;">SCHEDULES DASHBOARD Dec 2021</h1>
+        <h1 class="card-title" style=color:#1dacd6; font-family:Georgia; text-align: left; padding: 0px 0;">SCHEDULES DASHBOARD Nov 2021</h1>
       </div>
     </div>
     """
@@ -916,7 +916,7 @@ if page =='Inventories':
         <div class="card">
           <div class="card-body" style="border-radius: 10px 10px 0px 0px; padding-top: 5px; width: 800px;
            height: 50px;">
-            <h1 class="card-title" style=color:#ff4f00; font-family:Georgia; text-align: left; padding: 0px 0;">INVENTORIES MOVEMENT Dec 2021</h1>
+            <h1 class="card-title" style=color:#ff4f00; font-family:Georgia; text-align: left; padding: 0px 0;">INVENTORIES MOVEMENT Nov 2021</h1>
           </div>
         </div>
         """
